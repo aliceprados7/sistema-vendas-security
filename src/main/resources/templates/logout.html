@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sair - Sistema de Vendas</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container" style="max-width: 420px;">
+    <div class="card shadow-sm mt-5">
+        <div class="card-body p-4 text-center">
+            <h4 class="mb-4">Deseja realmente sair?</h4>
+            <!-- th:action insere automaticamente o token CSRF -->
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn-danger">Sim, sair</button>
+                <a th:href="@{/}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

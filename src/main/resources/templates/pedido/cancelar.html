@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cancelar Pedido</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar-geral}"></div>
+<div class="container mt-5">
+    <div class="alert alert-danger shadow-sm">
+        <h3 class="alert-heading"><i class="bi bi-exclamation-triangle"></i> Confirmação de Cancelamento</h3>
+        <p>Você está prestes a cancelar o pedido abaixo. Esta ação atualizará o status e <strong>devolverá os itens ao estoque</strong>.</p>
+        <hr>
+        <p class="mb-0">
+            <strong>ID do Pedido:</strong> <span th:text="${pedido.id}"></span><br>
+            <strong>Cliente:</strong> <span th:text="${pedido.cliente.nomeCompleto}"></span><br>
+            <strong>Valor Total:</strong> <span th:text="|R$ ${#numbers.formatDecimal(pedido.valorTotal, 1, 'POINT', 2, 'COMMA')}|"></span>
+        </p>
+    </div>
+
+    <form th:action="@{/pedidos/cancelar/{id}(id=${pedido.id})}" method="post">
+        <button type="submit" class="btn btn-danger">
+            <i class="bi bi-trash"></i> Sim, cancelar pedido
+        </button>
+        <a th:href="@{/pedidos}" class="btn btn-secondary">Voltar</a>
+    </form>
+</div>
+</body>
+</html>

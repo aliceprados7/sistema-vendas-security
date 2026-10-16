@@ -1,0 +1,70 @@
+package br.com.aweb.sistema_vendas.model;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "pedidos")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Pedido {
+
+    // Construtor personalizado conforme especificação
+    public Pedido(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotNull(message = "Cliente é obrigatório")
+    @ManyToOne 
+    @JoinColumn(name = "cliente_id", nullable = false)
+    private Cliente cliente;
+
+    @Column(name = "data_pedido", nullable = false)
+    private LocalDateTime dataPedido = LocalDateTime.now();
+
+    @NotNull
+    @Column(name = "valor_total", nullable = false, precision = 10, scale = 2)
+    private BigDecimal valorTotal = BigDecimal.ZERO;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
+    private StatusPedido status = StatusPedido.ATIVO;
+
+    /*
+     * cascade = CascadeType.ALL: Propaga todas as operações (salvar, atualizar, excluir) 
+     * executadas no Pedido para a sua lista de itens.
+     * 
+     * orphanRemoval = true: Garante a remoção no banco de dados de qualquer ItemPedido 
+     * que for desvinculado/removido da lista de itens deste pedido.
+     */
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ItemPedido> itens = new ArrayList<>();
+
+    @Version
+    private Integer version;
+}
